@@ -69,9 +69,5 @@
       "errorRequired": "Please fill in all fields.",
       "errorGeneric": "Something went wrong. Please try again."
     }
-  },
-  "footer": {
-    "builtWith": "Built with Next.js + Supabase, managed via Telegram bot",
-    "rights": "All rights reserved."
   }
 }

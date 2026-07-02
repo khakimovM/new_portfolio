@@ -69,9 +69,5 @@
       "errorRequired": "Iltimos, barcha maydonlarni to'ldiring.",
       "errorGeneric": "Xatolik yuz berdi. Qaytadan urinib ko'ring."
     }
-  },
-  "footer": {
-    "builtWith": "Next.js + Supabase asosida, Telegram bot orqali boshqariladi",
-    "rights": "Barcha huquqlar himoyalangan."
   }
 }

@@ -1,11 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import type { Profile } from "@/lib/types";
 
 export default function Footer({ profile }: { profile: Profile }) {
-  const t = useTranslations("footer");
-
   const links = [
     profile.github && { label: "GitHub", href: profile.github },
     profile.linkedin && { label: "LinkedIn", href: profile.linkedin },
@@ -35,10 +32,6 @@ export default function Footer({ profile }: { profile: Profile }) {
             </a>
           ))}
         </div>
-        <p className="text-xs text-muted/80">{t("builtWith")}</p>
-        <p className="text-xs text-muted/60">
-          © {new Date().getFullYear()} {profile.name}. {t("rights")}
-        </p>
       </div>
     </footer>
   );
