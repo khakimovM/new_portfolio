@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
+/* Anthropic uslubidagi yorug' krem palitra */
 :root {
-  --background: #0a0a0f;
-  --surface: #11111a;
-  --surface-2: #16161f;
-  --border: #23232f;
-  --foreground: #e8e8f0;
-  --muted: #8b8b9e;
-  --accent: #34d399; /* terminal green */
-  --accent-2: #22d3ee; /* cyan */
-  --accent-3: #a78bfa; /* purple */
+  --background: #faf9f5;
+  --surface: #f0eee5;
+  --surface-2: #e8e3d5;
+  --border: #dcd6c8;
+  --foreground: #141413;
+  --muted: #6e6a5e;
+  --accent: #d97757; /* "Claude apelsin" */
+  --accent-2: #b8703f;
+  --terminal: #1f1e1b; /* to'q terminal kartasi (krem fonda kontrast) */
+  --terminal-2: #2a2925;
 }
 
 @theme inline {
@@ -21,38 +23,30 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
-  --color-accent-3: var(--accent-3);
-  --font-sans: var(--font-space-grotesk);
+  --color-terminal: var(--terminal);
+  --color-terminal-2: var(--terminal-2);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-source-serif);
   --font-mono: var(--font-jetbrains-mono);
 }
 
-html {
-  scroll-behavior: smooth;
+/* Lenis smooth-scroll bilan ziddiyat bo'lmasligi uchun CSS smooth o'chirilgan */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 30%, transparent);
-}
-
-/* Gradient matn (ism, sarlavha aksentlari uchun) */
-.gradient-text {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Kartalar/rasm atrofidagi yumshoq glow */
-.glow-ring {
-  box-shadow:
-    0 0 40px -8px color-mix(in srgb, var(--accent) 45%, transparent),
-    0 0 90px -20px color-mix(in srgb, var(--accent-2) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
 /* Terminal kursor miltillashi */
@@ -64,11 +58,26 @@ body {
   animation: blink 1s step-end infinite;
 }
 
-/* Orqa fondagi nozik grid chiziqlar */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--border) 55%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--border) 55%, transparent) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+/* Skills cheksiz lentasi (marquee) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 32s) linear infinite;
+}
+.marquee-track.reverse {
+  animation-direction: reverse;
+}
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+.marquee-group:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }

@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import TerminalWindow, { type TerminalLine } from "@/components/ui/TerminalWindow";
 import { localized, type Locale, type Profile, type Skill } from "@/lib/types";
@@ -15,79 +16,131 @@ export default function Hero({
 }) {
   const t = useTranslations("hero");
   const locale = useLocale() as Locale;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Rasm scroll'da sekin siljiydi (parallax)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 70]);
 
   const stack = skills.slice(0, 6).map((s) => s.name).join(", ");
   const lines: TerminalLine[] = [
     { type: "cmd", text: t("terminalLines.whoami") },
-    { type: "out", text: `${profile.name} — ${localized(profile, "title", locale)}`, color: "var(--accent-2)" },
+    { type: "out", text: `${profile.name} — ${localized(profile, "title", locale)}`, color: "#e8b98f" },
     { type: "cmd", text: t("terminalLines.stack") },
     { type: "out", text: stack || "Next.js, Supabase, TypeScript" },
     { type: "cmd", text: t("terminalLines.status") },
-    { type: "out", text: `✓ ${t("terminalLines.statusResult")}`, color: "var(--accent)" },
+    { type: "out", text: `✓ ${t("terminalLines.statusResult")}`, color: "#9dbb84" },
   ];
 
+  const nameWords = profile.name.split(" ");
+
   return (
-    <section id="top" className="relative overflow-hidden pt-28 pb-20 sm:pt-36">
-      <div className="bg-grid absolute inset-0 -z-10" />
-      {/* gradient nur dog'lari */}
-      <div className="absolute -top-32 left-1/4 -z-10 h-72 w-72 rounded-full bg-accent/15 blur-[120px]" />
-      <div className="absolute top-20 right-1/5 -z-10 h-72 w-72 rounded-full bg-accent-3/15 blur-[120px]" />
+    <section ref={sectionRef} id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40">
+      {/* juda nozik apelsin nur */}
+      <div className="absolute -top-24 right-[10%] -z-10 h-96 w-96 rounded-full bg-accent/10 blur-[130px]" />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
-        {/* Rasm */}
-        <motion.div
-          initial={{ opacity: 0, x: -32 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="order-1 flex justify-center lg:order-none"
-        >
-          <div className="glow-ring relative aspect-square w-64 overflow-hidden rounded-2xl border border-border-dim sm:w-80 lg:w-96">
-            <Image
-              src={profile.hero_image_url ?? "/hero-placeholder.svg"}
-              alt={profile.name}
-              fill
-              sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 384px"
-              className="object-cover"
-              priority
-            />
-          </div>
-        </motion.div>
-
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
         {/* Matn + terminal + tugmalar */}
-        <motion.div
-          initial={{ opacity: 0, x: 32 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-        >
-          <p className="font-mono text-accent">{t("greeting")}</p>
-          <h1 className="mt-2 text-4xl font-bold sm:text-5xl">
-            <span className="gradient-text">{profile.name}</span>
+        <div>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="font-mono text-sm font-semibold tracking-[0.2em] text-accent uppercase"
+          >
+            {t("greeting")}
+          </motion.p>
+
+          {/* Ism — so'zlar mask ichidan ko'tarilib chiqadi */}
+          <h1 className="mt-4 font-serif text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
+            {nameWords.map((word, i) => (
+              <span key={i} className="inline-block overflow-hidden pb-1 align-bottom">
+                <motion.span
+                  className="inline-block"
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.15 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {word}
+                  {i < nameWords.length - 1 ? " " : ""}
+                </motion.span>
+              </span>
+            ))}
           </h1>
-          <p className="mt-3 text-lg text-muted">{localized(profile, "bio", locale)}</p>
 
-          <div className="mt-8">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-4 text-xl text-muted"
+          >
+            {localized(profile, "title", locale)}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.65 }}
+            className="mt-9"
+          >
             <TerminalWindow lines={lines} />
-          </div>
+          </motion.div>
 
-          <div className="mt-8 flex flex-wrap gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="mt-8 flex flex-wrap gap-4"
+          >
             {profile.resume_url && (
               <a
                 href={profile.resume_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 download
-                className="rounded-lg bg-accent px-6 py-3 font-mono text-sm font-semibold text-background transition-all hover:brightness-110 hover:shadow-[0_0_28px_-6px_var(--accent)]"
+                className="group rounded-full bg-foreground px-7 py-3.5 text-sm font-medium text-background transition-all duration-300 hover:bg-accent hover:scale-[1.03]"
               >
-                ⬇ {t("downloadCv")}
+                {t("downloadCv")}
+                <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-y-0.5">
+                  ↓
+                </span>
               </a>
             )}
             <a
               href="#order"
-              className="rounded-lg border border-accent-2/60 px-6 py-3 font-mono text-sm font-semibold text-accent-2 transition-all hover:bg-accent-2/10 hover:shadow-[0_0_28px_-6px_var(--accent-2)]"
+              className="group rounded-full border border-foreground/25 px-7 py-3.5 text-sm font-medium transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03]"
             >
-              {t("orderCta")} →
+              {t("orderCta")}
+              <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
             </a>
-          </div>
+          </motion.div>
+        </div>
+
+        {/* Rasm — bej kartada, parallax bilan */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="flex justify-center"
+        >
+          <motion.div style={{ y: imageY }} className="relative w-full max-w-md">
+            <div className="absolute -inset-3 -z-10 rotate-2 rounded-[2rem] bg-surface-2" />
+            <div className="relative aspect-square overflow-hidden rounded-[1.75rem] border border-border-dim bg-surface">
+              <Image
+                src={profile.hero_image_url ?? "/hero-placeholder.svg"}
+                alt={profile.name}
+                fill
+                sizes="(max-width: 1024px) 90vw, 448px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

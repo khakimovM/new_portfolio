@@ -17,23 +17,26 @@ export default function Footer({ profile }: { profile: Profile }) {
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <footer className="border-t border-border-dim bg-surface/50">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 text-center sm:px-6">
-        <div className="flex flex-wrap justify-center gap-5">
+    <footer className="border-t border-border-dim bg-background">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-10 text-center sm:px-6">
+        <p className="font-mono text-sm font-bold">
+          <span className="text-accent">~/</span>codewithaziz
+        </p>
+        <div className="flex flex-wrap justify-center gap-6">
           {links.map((l) => (
             <a
               key={l.label}
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-sm text-muted transition-colors hover:text-accent"
+              className="text-sm text-muted transition-colors hover:text-accent"
             >
               {l.label}
             </a>
           ))}
         </div>
-        <p className="font-mono text-xs text-muted/70">{t("builtWith")}</p>
-        <p className="font-mono text-xs text-muted/50">
+        <p className="text-xs text-muted/80">{t("builtWith")}</p>
+        <p className="text-xs text-muted/60">
           © {new Date().getFullYear()} {profile.name}. {t("rights")}
         </p>
       </div>

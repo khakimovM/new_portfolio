@@ -178,7 +178,8 @@ async function sendProfileMenu(ctx: Context): Promise<void> {
     kb.text(`✏️ ${labels[f]}`, `pr:e:${f}`);
     if (i % 2 === 1) kb.row();
   });
-  kb.row().text("🖼 Hero rasm", "pr:img").text("📄 CV (PDF)", "pr:cv");
+  kb.row().text("🖼 Hero rasm", "pr:img").text("🖼 About rasm", "pr:aimg");
+  kb.row().text("📄 CV (PDF)", "pr:cv");
   kb.row().text("⬅️ Orqaga", "m:main");
 
   await ctx.reply(
@@ -189,7 +190,8 @@ async function sendProfileMenu(ctx: Context): Promise<void> {
       `Telefon: ${esc(p?.phone) || "—"}\n` +
       `TG: @${esc(p?.telegram_username) || "—"}\n` +
       `CV: ${p?.resume_url ? "bor ✅" : "yo'q ❌"}\n` +
-      `Hero rasm: ${p?.hero_image_url ? "bor ✅" : "placeholder"}`,
+      `Hero rasm: ${p?.hero_image_url ? "bor ✅" : "placeholder"}\n` +
+      `About rasm: ${p?.about_image_url ? "bor ✅" : "placeholder"}`,
     { parse_mode: "HTML", reply_markup: kb }
   );
 }
@@ -359,6 +361,13 @@ export function registerAdminHandlers(bot: Bot): void {
     await ctx.reply("🖼 Hero rasmni yuboring (photo sifatida):");
   });
 
+  bot.callbackQuery("pr:aimg", async (ctx) => {
+    if (!guard(ctx)) return denyCallback(ctx);
+    await ctx.answerCallbackQuery();
+    await setSession(ctx.chat!.id, { flow: "about_img", step: 0, data: {} });
+    await ctx.reply("🖼 «Men haqimda» bo'limi uchun rasmni yuboring (photo sifatida):");
+  });
+
   bot.callbackQuery("pr:cv", async (ctx) => {
     if (!guard(ctx)) return denyCallback(ctx);
     await ctx.answerCallbackQuery();
@@ -412,6 +421,15 @@ export function registerAdminHandlers(bot: Bot): void {
       await clearSession(chatId);
       revalidateTag("profile");
       await ctx.reply("✅ Hero rasm yangilandi!");
+      return;
+    }
+
+    if (session.flow === "about_img") {
+      const url = await uploadTelegramFile(ctx.api, fileId, "profile/about.jpg", "image/jpeg");
+      await supabaseAdmin().from("profile").update({ about_image_url: url }).eq("id", 1);
+      await clearSession(chatId);
+      revalidateTag("profile");
+      await ctx.reply("✅ «Men haqimda» rasmi yangilandi!");
       return;
     }
   });

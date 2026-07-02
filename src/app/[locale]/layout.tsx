@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Inter, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import SmoothScroll from "@/components/SmoothScroll";
 import "../globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
 });
 
@@ -43,10 +49,12 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`${inter.variable} ${sourceSerif.variable} ${jetbrainsMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

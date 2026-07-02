@@ -12,6 +12,7 @@ create table if not exists profile (
   bio_en text not null default '',
   bio_uz text not null default '',
   hero_image_url text,
+  about_image_url text, -- "Men haqimda" bo'limi uchun ikkinchi rasm
   email text,
   phone text,
   github text,

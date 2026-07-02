@@ -12,6 +12,7 @@ const OUT_DELAY = 350; // natija chiqishidan oldingi pauza
 /**
  * Terminal oynasi: komandalar belgima-belgi "yoziladi",
  * natijalar esa birdaniga chiqadi — haqiqiy terminal kabi.
+ * Krem fonda ataylab to'q karta — kontrast aksent.
  */
 export default function TerminalWindow({ lines }: { lines: TerminalLine[] }) {
   const [lineIdx, setLineIdx] = useState(0);
@@ -48,16 +49,16 @@ export default function TerminalWindow({ lines }: { lines: TerminalLine[] }) {
   }, [lines, lineIdx, charIdx]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border-dim bg-surface shadow-2xl">
+    <div className="overflow-hidden rounded-2xl bg-terminal shadow-[0_24px_60px_-24px_rgba(20,20,19,0.45)]">
       {/* sarlavha paneli */}
-      <div className="flex items-center gap-2 border-b border-border-dim bg-surface-2 px-4 py-3">
-        <span className="h-3 w-3 rounded-full bg-red-500/80" />
-        <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
-        <span className="h-3 w-3 rounded-full bg-green-500/80" />
-        <span className="ml-3 font-mono text-xs text-muted">aziz@codewithaziz: ~</span>
+      <div className="flex items-center gap-2 bg-terminal-2 px-4 py-3">
+        <span className="h-3 w-3 rounded-full bg-[#e2695c]" />
+        <span className="h-3 w-3 rounded-full bg-[#e0a740]" />
+        <span className="h-3 w-3 rounded-full bg-[#7ea16b]" />
+        <span className="ml-3 font-mono text-xs text-[#8f8d84]">aziz@codewithaziz: ~</span>
       </div>
 
-      <div className="min-h-[220px] p-5 font-mono text-sm leading-7">
+      <div className="min-h-[210px] p-5 font-mono text-sm leading-7">
         {visible.map(({ line, partial }, i) => {
           const text =
             partial !== undefined && line.type === "cmd"
@@ -69,11 +70,11 @@ export default function TerminalWindow({ lines }: { lines: TerminalLine[] }) {
               {line.type === "cmd" ? (
                 <>
                   <span className="text-accent">$ </span>
-                  <span className="text-foreground">{text}</span>
+                  <span className="text-[#f0eee5]">{text}</span>
                   {isTyping && <span className="cursor-blink text-accent">▊</span>}
                 </>
               ) : (
-                <span style={{ color: line.color ?? "var(--muted)" }}>{text}</span>
+                <span style={{ color: line.color ?? "#a8a69c" }}>{text}</span>
               )}
             </div>
           );

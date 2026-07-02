@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
@@ -28,6 +29,7 @@ export default async function Home({
       <Navbar />
       <main>
         <Hero profile={profile} skills={skills} />
+        <About profile={profile} />
         <Skills skills={skills} />
         <Projects projects={projects} />
         <Experience items={experience} />

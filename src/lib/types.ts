@@ -6,6 +6,7 @@ export type Profile = {
   bio_en: string;
   bio_uz: string;
   hero_image_url: string | null;
+  about_image_url: string | null;
   email: string | null;
   phone: string | null;
   github: string | null;

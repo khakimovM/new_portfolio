@@ -2,54 +2,49 @@
   <!-- Vaqtinchalik rasm: laptop ushlagan dasturchi. Keyinchalik bot orqali o'z rasmingiz bilan almashtiring -->
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#11111a"/>
-      <stop offset="1" stop-color="#16162a"/>
-    </linearGradient>
-    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="0.5" stop-color="#22d3ee"/>
-      <stop offset="1" stop-color="#a78bfa"/>
+      <stop offset="0" stop-color="#f0eee5"/>
+      <stop offset="1" stop-color="#e8e3d5"/>
     </linearGradient>
     <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1e2a3a"/>
-      <stop offset="1" stop-color="#101826"/>
+      <stop offset="0" stop-color="#2a2925"/>
+      <stop offset="1" stop-color="#1f1e1b"/>
     </linearGradient>
   </defs>
 
-  <rect width="480" height="480" rx="24" fill="url(#bg)"/>
+  <rect width="480" height="480" fill="url(#bg)"/>
 
   <!-- orbit halqalar -->
-  <circle cx="240" cy="230" r="180" fill="none" stroke="#23232f" stroke-width="1.5"/>
-  <circle cx="240" cy="230" r="150" fill="none" stroke="#23232f" stroke-width="1"/>
-  <circle cx="240" cy="230" r="170" fill="none" stroke="url(#glow)" stroke-width="2" stroke-dasharray="6 14" opacity="0.55"/>
+  <circle cx="240" cy="230" r="180" fill="none" stroke="#dcd6c8" stroke-width="1.5"/>
+  <circle cx="240" cy="230" r="150" fill="none" stroke="#dcd6c8" stroke-width="1"/>
+  <circle cx="240" cy="230" r="170" fill="none" stroke="#d97757" stroke-width="2" stroke-dasharray="6 14" opacity="0.5"/>
 
   <!-- suzuvchi kod belgilari -->
-  <g font-family="monospace" font-size="20" opacity="0.7">
-    <text x="70" y="110" fill="#34d399">&lt;/&gt;</text>
-    <text x="380" y="90" fill="#22d3ee">{ }</text>
-    <text x="400" y="300" fill="#a78bfa">=&gt;</text>
-    <text x="48" y="300" fill="#22d3ee">#</text>
-    <text x="90" y="400" fill="#a78bfa">( )</text>
-    <text x="370" y="410" fill="#34d399">;</text>
+  <g font-family="monospace" font-size="20" opacity="0.75">
+    <text x="70" y="110" fill="#d97757">&lt;/&gt;</text>
+    <text x="380" y="90" fill="#b8703f">{ }</text>
+    <text x="400" y="300" fill="#8f8d84">=&gt;</text>
+    <text x="48" y="300" fill="#b8703f">#</text>
+    <text x="90" y="400" fill="#8f8d84">( )</text>
+    <text x="370" y="410" fill="#d97757">;</text>
   </g>
 
   <!-- dasturchi -->
   <g>
     <!-- tana -->
-    <path d="M150 400 Q150 320 240 318 Q330 320 330 400 L330 430 Q240 448 150 430 Z" fill="#1d1d2b" stroke="#2c2c3d" stroke-width="2"/>
+    <path d="M150 400 Q150 320 240 318 Q330 320 330 400 L330 430 Q240 448 150 430 Z" fill="#3a382f" stroke="#4a483d" stroke-width="2"/>
     <!-- kofta chizig'i -->
-    <path d="M240 318 L240 360" stroke="#2c2c3d" stroke-width="2"/>
+    <path d="M240 318 L240 360" stroke="#4a483d" stroke-width="2"/>
     <!-- bo'yin -->
     <rect x="226" y="272" width="28" height="30" rx="10" fill="#c99b76"/>
     <!-- bosh -->
     <circle cx="240" cy="240" r="46" fill="#d9a97f"/>
     <!-- soch -->
-    <path d="M194 236 Q192 186 240 184 Q290 186 286 238 Q284 210 262 206 Q234 200 214 214 Q198 222 194 236 Z" fill="#1b1b26"/>
+    <path d="M194 236 Q192 186 240 184 Q290 186 286 238 Q284 210 262 206 Q234 200 214 214 Q198 222 194 236 Z" fill="#2b2a24"/>
     <!-- quloq -->
     <circle cx="195" cy="244" r="7" fill="#c99b76"/>
     <circle cx="285" cy="244" r="7" fill="#c99b76"/>
     <!-- ko'zoynak -->
-    <g stroke="#22d3ee" stroke-width="3" fill="none" opacity="0.9">
+    <g stroke="#b8703f" stroke-width="3" fill="none" opacity="0.9">
       <rect x="208" y="234" width="26" height="20" rx="6"/>
       <rect x="246" y="234" width="26" height="20" rx="6"/>
       <path d="M234 244 L246 244"/>
@@ -58,22 +53,22 @@
     <path d="M228 272 Q240 280 252 272" stroke="#a06b45" stroke-width="3" fill="none" stroke-linecap="round"/>
 
     <!-- qo'llar laptop tomon -->
-    <path d="M168 372 Q150 340 190 336 L214 344 L206 372 Z" fill="#1d1d2b" stroke="#2c2c3d" stroke-width="2"/>
-    <path d="M312 372 Q330 340 290 336 L266 344 L274 372 Z" fill="#1d1d2b" stroke="#2c2c3d" stroke-width="2"/>
+    <path d="M168 372 Q150 340 190 336 L214 344 L206 372 Z" fill="#3a382f" stroke="#4a483d" stroke-width="2"/>
+    <path d="M312 372 Q330 340 290 336 L266 344 L274 372 Z" fill="#3a382f" stroke="#4a483d" stroke-width="2"/>
     <!-- kaftlar -->
     <circle cx="206" cy="368" r="10" fill="#d9a97f"/>
     <circle cx="274" cy="368" r="10" fill="#d9a97f"/>
 
     <!-- laptop -->
     <g>
-      <rect x="172" y="352" width="136" height="10" rx="4" fill="#2b2b3c"/>
-      <path d="M180 268 L300 268 L308 352 L172 352 Z" fill="url(#screen)" stroke="url(#glow)" stroke-width="2.5"/>
+      <rect x="172" y="352" width="136" height="10" rx="4" fill="#4a483d"/>
+      <path d="M180 268 L300 268 L308 352 L172 352 Z" fill="url(#screen)" stroke="#d97757" stroke-width="2.5"/>
       <!-- ekran kod chiziqlari -->
       <g stroke-linecap="round" stroke-width="5">
-        <path d="M196 288 L232 288" stroke="#34d399"/>
-        <path d="M196 302 L262 302" stroke="#22d3ee"/>
-        <path d="M204 316 L248 316" stroke="#a78bfa"/>
-        <path d="M204 330 L278 330" stroke="#34d399" opacity="0.7"/>
+        <path d="M196 288 L232 288" stroke="#d97757"/>
+        <path d="M196 302 L262 302" stroke="#e8b98f"/>
+        <path d="M204 316 L248 316" stroke="#9dbb84"/>
+        <path d="M204 330 L278 330" stroke="#d97757" opacity="0.6"/>
       </g>
     </g>
   </g>

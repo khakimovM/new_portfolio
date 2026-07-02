@@ -1,19 +1,25 @@
 import Reveal from "./Reveal";
 
 export default function SectionHeading({
+  kicker,
   title,
   subtitle,
 }: {
+  kicker?: string;
   title: string;
   subtitle?: string;
 }) {
   return (
-    <Reveal className="mb-12 text-center">
-      <h2 className="font-mono text-3xl font-bold sm:text-4xl">
-        <span className="text-accent">#</span> {title}
+    <Reveal className="mb-14">
+      {kicker && (
+        <p className="mb-3 font-mono text-xs font-semibold tracking-[0.2em] text-accent uppercase">
+          {kicker}
+        </p>
+      )}
+      <h2 className="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">
+        {title}
       </h2>
-      {subtitle && <p className="mt-3 text-muted">{subtitle}</p>}
-      <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-accent via-accent-2 to-accent-3" />
+      {subtitle && <p className="mt-4 max-w-2xl text-lg text-muted">{subtitle}</p>}
     </Reveal>
   );
 }

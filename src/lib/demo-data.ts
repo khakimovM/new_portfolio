@@ -12,6 +12,7 @@ export const demoProfile: Profile = {
   bio_uz:
     "Men tezkor va zamonaviy web-ilovalar yarataman — landing sahifalardan to'liq platformalargacha.",
   hero_image_url: null,
+  about_image_url: null,
   email: "khakimovmukhammadaziz@gmail.com",
   phone: "+998 90 000 00 00",
   github: "https://github.com/",
