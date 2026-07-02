@@ -77,7 +77,7 @@ export function registerOrderHandlers(bot: Bot): void {
       .text("❌ Rad etish", `or:${order.id}`);
     await ctx.api.sendMessage(
       adminId(),
-      `🔔 <b>Sizga yangi zakaz qo'shildi!</b>\n\n${orderSummary(order)}`,
+      `🔔 <b>Sizga yangi buyurtma keldi!</b>\n\n${orderSummary(order)}`,
       { parse_mode: "HTML", reply_markup: kb }
     );
   });
@@ -136,7 +136,7 @@ export function registerOrderHandlers(bot: Bot): void {
 
       await ctx.api.sendMessage(
         order.client_chat_id,
-        `🎉 <b>Sizning zakazingiz qabul qilindi!</b>\n\n` +
+        `🎉 <b>Buyurtmangiz qabul qilindi!</b>\n\n` +
           (contacts ? `Bog'lanish uchun:\n${contacts}\n\n` : "") +
           `Tez orada siz bilan bog'lanishadi. Rahmat! 🤝`,
         { parse_mode: "HTML" }
@@ -177,7 +177,7 @@ export function registerOrderHandlers(bot: Bot): void {
   });
 }
 
-/** Admin menyusi uchun: kutilayotgan zakazlar ro'yxati */
+/** Admin menyusi uchun: kutilayotgan buyurtmalar ro'yxati */
 export async function sendPendingOrders(ctx: Context): Promise<void> {
   const sb = supabaseAdmin();
   const { data } = await sb
@@ -189,7 +189,7 @@ export async function sendPendingOrders(ctx: Context): Promise<void> {
   const orders = (data ?? []) as Order[];
 
   if (orders.length === 0) {
-    await ctx.reply("📋 Hozircha kutilayotgan zakazlar yo'q.");
+    await ctx.reply("📋 Hozircha kutilayotgan buyurtmalar yo'q.");
     return;
   }
 
@@ -197,7 +197,7 @@ export async function sendPendingOrders(ctx: Context): Promise<void> {
     const kb = new InlineKeyboard()
       .text("✅ Qabul qilish", `oa:${o.id}`)
       .text("❌ Rad etish", `or:${o.id}`);
-    await ctx.reply(`📋 <b>Zakaz</b>\n\n${orderSummary(o)}`, {
+    await ctx.reply(`📋 <b>Buyurtma</b>\n\n${orderSummary(o)}`, {
       parse_mode: "HTML",
       reply_markup: kb,
     });

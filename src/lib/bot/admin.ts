@@ -58,7 +58,7 @@ export async function sendMainMenu(ctx: Context): Promise<void> {
     .text("💼 Tajriba", "m:experience")
     .text("👤 Profil", "m:profile")
     .row()
-    .text("📋 Zakazlar", "m:orders");
+    .text("📋 Buyurtmalar", "m:orders");
 
   await ctx.reply(
     "🎛 <b>Portfolio boshqaruvi</b>\n\nBo'limni tanlang. Istalgan payt /cancel — amalni bekor qilish.",
