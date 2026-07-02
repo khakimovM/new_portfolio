@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "about": "Men haqimda",
+    "skills": "Ko'nikmalar",
+    "projects": "Loyihalar",
+    "experience": "Tajriba",
+    "order": "Zakaz berish"
+  },
+  "hero": {
+    "greeting": "Salom, men",
+    "downloadCv": "CV yuklab olish",
+    "orderCta": "Loyiha buyurtma qilish",
+    "terminalLines": {
+      "whoami": "whoami",
+      "stack": "cat stack.txt",
+      "status": "./status.sh",
+      "statusResult": "Freelance ishlarga ochiqman"
+    }
+  },
+  "about": {
+    "title": "Men haqimda"
+  },
+  "skills": {
+    "title": "Ko'nikmalar",
+    "subtitle": "Men ishlatadigan texnologiyalar",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "database": "Ma'lumotlar bazasi",
+      "tools": "Vositalar",
+      "other": "Boshqa"
+    }
+  },
+  "projects": {
+    "title": "Loyihalar",
+    "subtitle": "Men yaratgan ishlar",
+    "featured": "Asosiy",
+    "visit": "Loyihaga o'tish"
+  },
+  "experience": {
+    "title": "Tajriba",
+    "subtitle": "Mening yo'lim",
+    "present": "Hozirgacha",
+    "types": {
+      "work": "Ish",
+      "education": "Ta'lim",
+      "certificate": "Sertifikat"
+    }
+  },
+  "order": {
+    "title": "Loyiha buyurtma qilish",
+    "subtitle": "Istalgan turdagi web sahifalar yarataman — landing sahifalar, internet-do'konlar, admin panellar, backend bilan to'liq loyihalar. G'oyangizni ayting — birga amalga oshiramiz.",
+    "services": {
+      "frontend": "Frontend — tezkor, moslashuvchan, zamonaviy UI",
+      "backend": "Backend — API, ma'lumotlar bazasi, integratsiyalar",
+      "fullstack": "To'liq loyihalar — g'oyadan production'gacha"
+    },
+    "form": {
+      "name": "To'liq ismingiz",
+      "namePlaceholder": "Aliyev Vali",
+      "phone": "Telefon raqamingiz",
+      "phonePlaceholder": "+998 90 123 45 67",
+      "description": "Loyihangiz haqida qisqacha",
+      "descriptionPlaceholder": "Menga do'konim uchun internet-do'kon kerak...",
+      "submit": "Telegram orqali yuborish",
+      "submitting": "Yuborilmoqda...",
+      "hint": "Yuborilgach, buyurtmani tasdiqlash uchun Telegramga yo'naltirilasiz.",
+      "errorRequired": "Iltimos, barcha maydonlarni to'ldiring.",
+      "errorGeneric": "Xatolik yuz berdi. Qaytadan urinib ko'ring."
+    }
+  },
+  "footer": {
+    "builtWith": "Next.js + Supabase asosida, Telegram bot orqali boshqariladi",
+    "rights": "Barcha huquqlar himoyalangan."
+  }
+}

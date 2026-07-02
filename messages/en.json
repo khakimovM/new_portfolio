@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "experience": "Experience",
+    "order": "Hire Me"
+  },
+  "hero": {
+    "greeting": "Hi, I am",
+    "downloadCv": "Download CV",
+    "orderCta": "Order a Project",
+    "terminalLines": {
+      "whoami": "whoami",
+      "stack": "cat stack.txt",
+      "status": "./status.sh",
+      "statusResult": "Available for freelance work"
+    }
+  },
+  "about": {
+    "title": "About Me"
+  },
+  "skills": {
+    "title": "Skills",
+    "subtitle": "Technologies I work with",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "database": "Database",
+      "tools": "Tools",
+      "other": "Other"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Things I have built",
+    "featured": "Featured",
+    "visit": "Visit project"
+  },
+  "experience": {
+    "title": "Experience",
+    "subtitle": "My journey so far",
+    "present": "Present",
+    "types": {
+      "work": "Work",
+      "education": "Education",
+      "certificate": "Certificate"
+    }
+  },
+  "order": {
+    "title": "Order a Project",
+    "subtitle": "I build any kind of website — landing pages, online stores, dashboards, full-stack apps with custom backends. Tell me about your idea and let's make it real.",
+    "services": {
+      "frontend": "Frontend — fast, responsive, modern UI",
+      "backend": "Backend — APIs, databases, integrations",
+      "fullstack": "Full projects — from idea to production"
+    },
+    "form": {
+      "name": "Full name",
+      "namePlaceholder": "John Doe",
+      "phone": "Phone number",
+      "phonePlaceholder": "+998 90 123 45 67",
+      "description": "Briefly about your project",
+      "descriptionPlaceholder": "I need an online store for my shop...",
+      "submit": "Send via Telegram",
+      "submitting": "Sending...",
+      "hint": "After sending you will be redirected to Telegram to confirm your order.",
+      "errorRequired": "Please fill in all fields.",
+      "errorGeneric": "Something went wrong. Please try again."
+    }
+  },
+  "footer": {
+    "builtWith": "Built with Next.js + Supabase, managed via Telegram bot",
+    "rights": "All rights reserved."
+  }
+}
