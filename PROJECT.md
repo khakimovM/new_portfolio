@@ -1,5 +1,8 @@
 # PROJECT.md — codewithaziz.uz dinamik portfolio
 
+> Qilingan ishlar tarixi va kutilayotgan vazifalar: `CHANGELOG.md`da.
+> Yirik ish tugagach o'sha faylga yozib borilsin.
+
 ## Loyiha maqsadi
 
 Muxammadaziz Khakimovning shaxsiy portfoliosi. Ikki vazifasi bor:
