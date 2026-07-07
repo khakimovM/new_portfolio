@@ -30,9 +30,9 @@ export default function About({ profile }: { profile: Profile }) {
 
   return (
     <section ref={sectionRef} id="about" className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* Matn */}
-        <div>
+      <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+        {/* Matn — telefonda birinchi, katta ekranda o'ngda */}
+        <div className="lg:order-2">
           <Reveal>
             <p className="mb-3 font-mono text-xs font-semibold tracking-[0.2em] text-accent uppercase">
               {t("kicker")}
@@ -66,8 +66,8 @@ export default function About({ profile }: { profile: Profile }) {
           </Reveal>
         </div>
 
-        {/* Ikkinchi rasm — bej kartada, parallax */}
-        <Reveal delay={0.1}>
+        {/* Ikkinchi rasm — bej kartada, parallax; katta ekranda chapda */}
+        <Reveal delay={0.1} className="lg:order-1">
           <motion.div style={{ y: imageY }} className="relative mx-auto w-full max-w-sm">
             <div className="absolute -inset-3 -z-10 -rotate-2 rounded-[2rem] bg-surface-2" />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] border border-border-dim bg-surface">
