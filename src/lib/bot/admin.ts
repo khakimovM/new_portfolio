@@ -5,7 +5,7 @@ import { revalidateTag as nextRevalidateTag } from "next/cache";
 function revalidateTag(tag: string): void {
   nextRevalidateTag(tag, "max");
 }
-import { Bot, Context, InlineKeyboard } from "grammy";
+import { Bot, Context, InlineKeyboard, Keyboard } from "grammy";
 import { supabaseAdmin } from "@/lib/supabase";
 import type { Experience, Profile, Project, Skill } from "@/lib/types";
 import { esc, isAdminId, parseDate, EXPERIENCE_TYPES, SKILL_CATEGORIES } from "./format";
@@ -37,6 +37,17 @@ const PROFILE_FIELDS = [
   "linkedin",
   "telegram_username",
 ] as const;
+
+// Loyihaga ko'pi bilan shuncha rasm yuklanadi (karusel uchun)
+const MAX_PROJECT_IMAGES = 10;
+const DONE_LABEL = "✅ Tugatish";
+
+// Rasm yig'ish paytida pastdan chiqadigan klaviatura
+const doneKeyboard = new Keyboard().text(DONE_LABEL).resized();
+
+function sessionImages(session: Session): string[] {
+  return Array.isArray(session.data.images) ? (session.data.images as string[]) : [];
+}
 
 function guard(ctx: Context): boolean {
   return isAdminId(ctx.from?.id);
@@ -100,7 +111,7 @@ async function sendProjectView(ctx: Context, id: string): Promise<void> {
     .row()
     .text("🧩 Stack", `p:e:tech:${id}`)
     .text("🔗 URL", `p:e:url:${id}`)
-    .text("🖼 Rasm", `p:e:img:${id}`)
+    .text("🖼 Rasmlar", `p:e:img:${id}`)
     .row()
     .text(p.published ? "🙈 Yashirish" : "👁 Ko'rsatish", `p:pub:${id}`)
     .text("🗑 O'chirish", `p:del:${id}`)
@@ -113,7 +124,7 @@ async function sendProjectView(ctx: Context, id: string): Promise<void> {
       `🇺🇿 ${esc(p.description_uz) || "—"}\n\n` +
       `🧩 ${esc(p.tech_stack.join(", ")) || "—"}\n` +
       `🔗 ${esc(p.url)}\n` +
-      `🖼 ${p.image_url ? "bor" : "yo'q"}`,
+      `🖼 ${p.image_urls?.length ? `${p.image_urls.length} ta rasm` : "rasm yo'q"}`,
     { parse_mode: "HTML", reply_markup: kb }
   );
 }
@@ -235,8 +246,17 @@ export function registerAdminHandlers(bot: Bot): void {
     await ctx.answerCallbackQuery();
     const [, field, id] = ctx.match;
     if (field === "img") {
-      await setSession(ctx.chat!.id, { flow: "project_img", step: 0, data: { id } });
-      await ctx.reply("🖼 Yangi rasmni yuboring (photo sifatida):");
+      await setSession(ctx.chat!.id, {
+        flow: "project_imgs",
+        step: 0,
+        data: { id, images: [] },
+      });
+      await ctx.reply(
+        `🖼 Rasmlarni birma-bir yuboring (${MAX_PROJECT_IMAGES} tagacha).\n` +
+          "Yangi rasmlar eskilarini to'liq almashtiradi.\n" +
+          `Tugatish uchun pastdagi «${DONE_LABEL}» tugmasini bosing yoki /done deb yozing.`,
+        { reply_markup: doneKeyboard }
+      );
       return;
     }
     await setSession(ctx.chat!.id, { flow: "edit_project", step: 0, data: { id, field } });
@@ -398,20 +418,49 @@ export function registerAdminHandlers(bot: Bot): void {
     const fileId = photos[photos.length - 1].file_id; // eng katta o'lcham
 
     if (session.flow === "add_project" && session.step === 5) {
-      const id = randomUUID();
-      const url = await uploadTelegramFile(ctx.api, fileId, `projects/${id}.jpg`, "image/jpeg");
-      await saveNewProject(ctx, chatId, session, id, url);
+      const d = session.data;
+      const pid = typeof d.pid === "string" ? d.pid : randomUUID();
+      const images = sessionImages(session);
+      const url = await uploadTelegramFile(
+        ctx.api,
+        fileId,
+        `projects/${pid}/${images.length + 1}.jpg`,
+        "image/jpeg"
+      );
+      images.push(url);
+      if (images.length >= MAX_PROJECT_IMAGES) {
+        await saveNewProject(ctx, chatId, session, pid, images);
+        return;
+      }
+      await setSession(chatId, { ...session, data: { ...d, pid, images } });
+      await ctx.reply(
+        `📸 ${images.length}/${MAX_PROJECT_IMAGES} rasm qabul qilindi.\n` +
+          `Keyingi rasmni yuboring yoki «${DONE_LABEL}» tugmasini bosing.`,
+        { reply_markup: doneKeyboard }
+      );
       return;
     }
 
-    if (session.flow === "project_img") {
+    if (session.flow === "project_imgs") {
       const id = String(session.data.id);
-      const url = await uploadTelegramFile(ctx.api, fileId, `projects/${id}.jpg`, "image/jpeg");
-      await supabaseAdmin().from("projects").update({ image_url: url }).eq("id", id);
-      await clearSession(chatId);
-      revalidateTag("projects");
-      await ctx.reply("✅ Rasm yangilandi!");
-      await sendProjectView(ctx, id);
+      const images = sessionImages(session);
+      const url = await uploadTelegramFile(
+        ctx.api,
+        fileId,
+        `projects/${id}/${images.length + 1}.jpg`,
+        "image/jpeg"
+      );
+      images.push(url);
+      if (images.length >= MAX_PROJECT_IMAGES) {
+        await finishProjectImages(ctx, chatId, id, images);
+        return;
+      }
+      await setSession(chatId, { ...session, data: { ...session.data, images } });
+      await ctx.reply(
+        `📸 ${images.length}/${MAX_PROJECT_IMAGES} rasm qabul qilindi.\n` +
+          `Keyingi rasmni yuboring yoki «${DONE_LABEL}» tugmasini bosing.`,
+        { reply_markup: doneKeyboard }
+      );
       return;
     }
 
@@ -502,18 +551,48 @@ async function handleAdminText(
         }
         d.url = text;
         await setSession(chatId, { ...session, step: 5, data: d });
-        await ctx.reply("6/6 — Loyiha <b>rasmini</b> yuboring yoki /skip deb yozing:", {
-          parse_mode: "HTML",
-        });
+        await ctx.reply(
+          `6/6 — Loyiha <b>rasmlarini</b> birma-bir yuboring (${MAX_PROJECT_IMAGES} tagacha).\n` +
+            `Tugatish uchun pastdagi «${DONE_LABEL}» tugmasini bosing. Rasmsiz saqlash: /skip`,
+          { parse_mode: "HTML", reply_markup: doneKeyboard }
+        );
         return;
-      case 5:
-        if (text === "/skip") {
-          await saveNewProject(ctx, chatId, session, randomUUID(), null);
+      case 5: {
+        const images = sessionImages(session);
+        if (text === "/skip" || text === DONE_LABEL || text === "/done") {
+          const pid = typeof d.pid === "string" ? d.pid : randomUUID();
+          await saveNewProject(ctx, chatId, session, pid, images);
         } else {
-          await ctx.reply("Rasm yuboring yoki /skip deb yozing.");
+          await ctx.reply(
+            `Rasm yuboring, «${DONE_LABEL}» tugmasini bosing yoki /skip deb yozing.`,
+            { reply_markup: doneKeyboard }
+          );
         }
         return;
+      }
     }
+  }
+
+  // --- Mavjud loyiha rasmlarini yangilash ---
+  if (session.flow === "project_imgs") {
+    if (text === DONE_LABEL || text === "/done") {
+      const id = String(session.data.id);
+      const images = sessionImages(session);
+      if (images.length === 0) {
+        await clearSession(chatId);
+        await ctx.reply("Hech qanday rasm yuborilmadi — eski rasmlar o'zgarmadi.", {
+          reply_markup: { remove_keyboard: true },
+        });
+        await sendProjectView(ctx, id);
+        return;
+      }
+      await finishProjectImages(ctx, chatId, id, images);
+    } else {
+      await ctx.reply(`Rasm yuboring yoki «${DONE_LABEL}» tugmasini bosing.`, {
+        reply_markup: doneKeyboard,
+      });
+    }
+    return;
   }
 
   // --- Loyiha maydonini tahrirlash ---
@@ -644,7 +723,7 @@ async function saveNewProject(
   chatId: number,
   session: Session,
   id: string,
-  imageUrl: string | null
+  imageUrls: string[]
 ): Promise<void> {
   const d = session.data;
   await supabaseAdmin().from("projects").insert({
@@ -654,12 +733,29 @@ async function saveNewProject(
     description_uz: d.description_uz ?? "",
     tech_stack: d.tech_stack ?? [],
     url: d.url,
-    image_url: imageUrl,
+    image_urls: imageUrls,
     published: true,
   });
   await clearSession(chatId);
   revalidateTag("projects");
-  await ctx.reply(`✅ «${esc(String(d.title))}» loyihasi qo'shildi va saytda ko'rinadi!`, {
-    parse_mode: "HTML",
+  await ctx.reply(
+    `✅ «${esc(String(d.title))}» loyihasi qo'shildi va saytda ko'rinadi! ` +
+      `(${imageUrls.length} ta rasm)`,
+    { parse_mode: "HTML", reply_markup: { remove_keyboard: true } }
+  );
+}
+
+async function finishProjectImages(
+  ctx: Context,
+  chatId: number,
+  id: string,
+  images: string[]
+): Promise<void> {
+  await supabaseAdmin().from("projects").update({ image_urls: images }).eq("id", id);
+  await clearSession(chatId);
+  revalidateTag("projects");
+  await ctx.reply(`✅ ${images.length} ta rasm saqlandi!`, {
+    reply_markup: { remove_keyboard: true },
   });
+  await sendProjectView(ctx, id);
 }

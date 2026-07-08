@@ -20,7 +20,7 @@ export type Project = {
   title: string;
   description_en: string;
   description_uz: string;
-  image_url: string | null;
+  image_urls: string[]; // 10 tagacha rasm (karusel)
   tech_stack: string[];
   url: string;
   featured: boolean;

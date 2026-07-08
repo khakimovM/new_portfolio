@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
+import ProjectCarousel from "@/components/ui/ProjectCarousel";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { localized, type Locale, type Project } from "@/lib/types";
 
@@ -47,14 +47,8 @@ export default function Projects({ projects }: { projects: Project[] }) {
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-dim bg-background transition-all duration-400 hover:-translate-y-2 hover:border-accent/50 hover:shadow-[0_24px_50px_-20px_rgba(20,20,19,0.25)]"
             >
               <div className="relative h-44 w-full overflow-hidden bg-surface-2">
-                {p.image_url ? (
-                  <Image
-                    src={p.image_url}
-                    alt={p.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                  />
+                {p.image_urls.length > 0 ? (
+                  <ProjectCarousel images={p.image_urls} title={p.title} />
                 ) : (
                   <div className="flex h-full items-center justify-center font-mono text-4xl text-border-dim transition-colors duration-500 group-hover:text-accent/40">
                     {"</>"}

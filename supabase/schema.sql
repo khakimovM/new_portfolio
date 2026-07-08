@@ -27,7 +27,7 @@ create table if not exists projects (
   title text not null,
   description_en text not null default '',
   description_uz text not null default '',
-  image_url text,
+  image_urls text[] not null default '{}', -- 10 tagacha rasm (karusel)
   tech_stack text[] not null default '{}',
   -- Bitta link: production sayt YOKI GitHub (agar deploy qilinmagan / yashirin bo'lsa)
   url text not null,

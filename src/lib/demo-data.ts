@@ -43,7 +43,8 @@ export const demoProjects: Project[] = [
       "My personal dynamic portfolio — Next.js frontend, Supabase backend, fully managed through a Telegram bot.",
     description_uz:
       "Shaxsiy dinamik portfoliom — Next.js frontend, Supabase backend, Telegram bot orqali boshqariladi.",
-    image_url: null,
+    // Karuselni lokal ko'rish uchun namunaviy rasmlar
+    image_urls: ["/hero-placeholder.svg", "/window.svg", "/globe.svg"],
     tech_stack: ["Next.js", "Supabase", "Tailwind CSS", "Telegram Bot API"],
     url: "https://codewithaziz.uz",
     featured: true,

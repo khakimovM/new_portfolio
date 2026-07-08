@@ -36,7 +36,9 @@
     "title": "Projects",
     "subtitle": "Things I have built",
     "featured": "Featured",
-    "visit": "Visit project"
+    "visit": "Visit project",
+    "prevImage": "Previous image",
+    "nextImage": "Next image"
   },
   "experience": {
     "title": "Experience",

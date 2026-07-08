@@ -43,7 +43,9 @@ export function getBot(): Bot {
   bot.command("cancel", async (ctx) => {
     if (!isAdminId(ctx.from?.id)) return;
     await clearSession(ctx.chat.id);
-    await ctx.reply("❎ Amal bekor qilindi. Menyu: /start");
+    await ctx.reply("❎ Amal bekor qilindi. Menyu: /start", {
+      reply_markup: { remove_keyboard: true },
+    });
   });
 
   // Zakaz callbacklari admin callbacklaridan oldin (prefikslar farqli, tartib muhim emas,

@@ -36,7 +36,9 @@
     "title": "Loyihalar",
     "subtitle": "Men yaratgan ishlar",
     "featured": "Asosiy",
-    "visit": "Loyihaga o'tish"
+    "visit": "Loyihaga o'tish",
+    "prevImage": "Oldingi rasm",
+    "nextImage": "Keyingi rasm"
   },
   "experience": {
     "title": "Tajriba",
