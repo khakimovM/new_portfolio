@@ -44,6 +44,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
+              draggable={false}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-dim bg-background transition-all duration-400 hover:-translate-y-2 hover:border-accent/50 hover:shadow-[0_24px_50px_-20px_rgba(20,20,19,0.25)]"
             >
               <div className="relative h-44 w-full overflow-hidden bg-surface-2">

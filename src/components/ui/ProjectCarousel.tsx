@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -12,6 +12,8 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
   const t = useTranslations("projects");
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Surish tugagach karta linki bosilib ketmasligi uchun
+  const dragging = useRef(false);
 
   const next = useCallback(() => setIndex((i) => (i + 1) % images.length), [images.length]);
   const prev = () => setIndex((i) => (i - 1 + images.length) % images.length);
@@ -30,10 +32,30 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
   };
 
   return (
-    <div
-      className="relative h-full w-full"
+    <motion.div
+      className={`relative h-full w-full ${images.length > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      drag={images.length > 1 ? "x" : false}
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.12}
+      onDragStart={() => {
+        dragging.current = true;
+      }}
+      onDragEnd={(_, info) => {
+        if (info.offset.x < -40 || info.velocity.x < -300) next();
+        else if (info.offset.x > 40 || info.velocity.x > 300) prev();
+        // click hodisasi drag'dan keyin keladi — biroz kutib bayroqni tushiramiz
+        setTimeout(() => {
+          dragging.current = false;
+        }, 100);
+      }}
+      onClickCapture={(e) => {
+        if (dragging.current) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
     >
       <AnimatePresence initial={false}>
         <motion.div
@@ -50,6 +72,7 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
+            draggable={false}
           />
         </motion.div>
       </AnimatePresence>
@@ -60,7 +83,7 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
             type="button"
             aria-label={t("prevImage")}
             onClick={(e) => stop(e, prev)}
-            className="absolute top-1/2 left-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground backdrop-blur-sm transition-colors hover:bg-accent hover:text-white"
+            className="absolute top-1/2 left-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground opacity-0 backdrop-blur-sm transition group-hover:opacity-100 focus-visible:opacity-100 hover:bg-accent hover:text-white"
           >
             ‹
           </button>
@@ -68,7 +91,7 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
             type="button"
             aria-label={t("nextImage")}
             onClick={(e) => stop(e, next)}
-            className="absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground backdrop-blur-sm transition-colors hover:bg-accent hover:text-white"
+            className="absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground opacity-0 backdrop-blur-sm transition group-hover:opacity-100 focus-visible:opacity-100 hover:bg-accent hover:text-white"
           >
             ›
           </button>
@@ -87,6 +110,6 @@ export default function ProjectCarousel({ images, title }: { images: string[]; t
           </div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
