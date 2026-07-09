@@ -2,6 +2,35 @@
 
 Har bir sessiyada nima qilingani shu yerda saqlanadi. Yangi ish qilinganda tepasiga qo'shib boriladi.
 
+## 2026-07-09 — Ko'p rasm (karusel), SEO, favicon, About tartibi
+
+### 1. Loyihalarga 10 tagacha rasm + karusel
+- Baza: `image_url` → `image_urls text[]` (migratsiya: `supabase/migration-project-images.sql`,
+  ishga tushirilgan; eski ustunni o'chirish ixtiyoriy qadam sifatida kutmoqda)
+- UI: `src/components/ui/ProjectCarousel.tsx` — 4 soniyada avto almashinish (hover'da pauza),
+  hover'da chiqadigan oldingi/keyingi tugmalar, nuqta-indikatorlar, sichqoncha/barmoq bilan surish
+  (karta linki drag'dan keyin bosilib ketmasligi uchun himoya; `draggable=false` muhim edi)
+- Bot: rasm yig'ish sikli — har rasmdan keyin «n/10», pastdan «✅ Tugatish» reply keyboard,
+  10 tada avto saqlash; «🖼 Rasmlar» mavjud loyihada ham shu oqim (eskilarini almashtiradi)
+- Rasmlar `projects/{id}/{n}.jpg` yo'lida saqlanadi
+
+### 2. SEO (Google'da ism bo'yicha topilish)
+- `generateMetadata`: ikki tilda title/description, ism imlo variantlari keywords'da,
+  hreflang/canonical, Open Graph + Twitter kartalar, `public/og.png` (1200×630)
+- JSON-LD `Person` sxemasi (`alternateName`da barcha imlolar: Khakimov/Xakimov,
+  Mukhammadaziz/Muxammadaziz...) + `WebSite`
+- `src/app/sitemap.ts`, `src/app/robots.ts`
+- Search Console: domen DNS TXT orqali tasdiqlangan (ahost.uz panelida, Host=`@`)
+- Vercel: asosiy domen `codewithaziz.uz` qilindi, `www` unga 308 redirect (avval teskarisi edi)
+
+### 3. Mayda ishlar
+- Favicon: `src/app/icon0.svg` (yumaloq burchakli `<A>` logo) + `icon1.png` (Safari zaxirasi)
+- About: katta ekranda rasm chapda/matn o'ngda, telefonда matn birinchi (`lg:order-*`)
+
+### Kutilayotgan
+- Profildagi GitHub linki hali seed'dagi bo'sh `https://github.com/` — bot orqali to'g'rilash kerak
+- Search Console'da sitemap yuborish + Request Indexing (foydalanuvchi tomonida)
+
 ## 2026-07-02 — Loyiha yaratildi va to'liq ishga tushirildi
 
 ### 1. Asos (noldan qurildi)
