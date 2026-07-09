@@ -32,6 +32,10 @@
       "other": "Boshqa"
     }
   },
+  "meta": {
+    "title": "Muxammadaziz (Aziz) Xakimov — Full-Stack Dasturchi",
+    "description": "Muxammadaziz Xakimov (Aziz Khakimov, codewithaziz) portfoliosi — o'zbekistonlik full-stack web dasturchi. Zamonaviy saytlar va web-ilovalar: Next.js, React, Node.js, Supabase, Telegram botlar."
+  },
   "projects": {
     "title": "Loyihalar",
     "subtitle": "Men yaratgan ishlar",

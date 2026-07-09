@@ -32,6 +32,10 @@
       "other": "Other"
     }
   },
+  "meta": {
+    "title": "Mukhammadaziz (Aziz) Khakimov — Full-Stack Developer",
+    "description": "Portfolio of Mukhammadaziz Khakimov (Aziz Khakimov, codewithaziz) — full-stack web developer from Uzbekistan. Modern websites and web applications: Next.js, React, Node.js, Supabase, Telegram bots."
+  },
   "projects": {
     "title": "Projects",
     "subtitle": "Things I have built",
