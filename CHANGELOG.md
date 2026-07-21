@@ -4,6 +4,10 @@ Har bir sessiyada nima qilingani shu yerda saqlanadi. Yangi ish qilinganda tepas
 
 ## 2026-07-21 — Loyihalar tartibini bot orqali boshqarish
 
+- OG banner tuzatildi: eski `public/og.png` aslida 176×118 bo'lgani uchun Telegram
+  link preview'da rasm chiqmayotgan edi — terminal uslubidagi haqiqiy 1200×630 banner
+  bilan almashtirildi (SVG → sharp). Telegram keshi @WebpageBot orqali yangilanadi
+
 - Bot: 📁 Loyihalar menyusida yangi «🔀 Tartib» tugmasi — raqamlangan ro'yxat, har bir
   loyiha uchun ⬆️/⬇️ tugmalar (birinchisida ⬆️, oxirgisida ⬇️ yo'q). Bosilganda qo'shnisi
   bilan o'rin almashadi, xabar joyida yangilanadi, `revalidateTag("projects")` chaqiriladi
