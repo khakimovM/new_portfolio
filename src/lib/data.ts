@@ -35,8 +35,8 @@ export const getProjects = unstable_cache(
       .from("projects")
       .select("*")
       .eq("published", true)
-      .order("featured", { ascending: false })
-      .order("sort_order", { ascending: true });
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
     if (error || !data) return [];
     // Migratsiya o'tkazilmagan bazada image_urls hali bo'lmasligi mumkin
     return (data as Project[]).map((p) => ({ ...p, image_urls: p.image_urls ?? [] }));

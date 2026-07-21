@@ -77,23 +77,59 @@ export async function sendMainMenu(ctx: Context): Promise<void> {
   );
 }
 
-async function sendProjectsMenu(ctx: Context): Promise<void> {
+async function fetchProjectsOrdered(): Promise<Project[]> {
   const { data } = await supabaseAdmin()
     .from("projects")
     .select("*")
-    .order("sort_order", { ascending: true });
-  const projects = (data ?? []) as Project[];
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  return (data ?? []) as Project[];
+}
+
+async function sendProjectsMenu(ctx: Context): Promise<void> {
+  const projects = await fetchProjectsOrdered();
 
   const kb = new InlineKeyboard();
   for (const p of projects) {
     kb.text(`${p.published ? "" : "🙈 "}${p.title.slice(0, 40)}`, `p:v:${p.id}`).row();
   }
-  kb.text("➕ Yangi loyiha", "p:add").row().text("⬅️ Orqaga", "m:main");
+  kb.text("➕ Yangi loyiha", "p:add").text("🔀 Tartib", "p:ord").row().text("⬅️ Orqaga", "m:main");
 
   await ctx.reply(
     `📁 <b>Loyihalar</b> (${projects.length} ta)\n\n🙈 — saytda ko'rinmaydi (unpublished)`,
     { parse_mode: "HTML", reply_markup: kb }
   );
+}
+
+async function sendReorderMenu(ctx: Context, edit: boolean): Promise<void> {
+  const projects = await fetchProjectsOrdered();
+  if (projects.length === 0) {
+    await ctx.reply("Loyihalar yo'q.");
+    return;
+  }
+
+  const lines = projects.map((p, i) => `${i + 1}. ${esc(p.title)}${p.featured ? " ★" : ""}`);
+  const text =
+    `🔀 <b>Loyihalar tartibi</b>\n\n${lines.join("\n")}\n\n` +
+    `⬆️/⬇️ bilan o'rnini o'zgartiring — saytda shu tartibda ko'rinadi.`;
+
+  const kb = new InlineKeyboard();
+  projects.forEach((p, i) => {
+    if (i > 0) kb.text(`⬆️ ${i + 1}`, `p:up:${p.id}`);
+    if (i < projects.length - 1) kb.text(`⬇️ ${i + 1}`, `p:dn:${p.id}`);
+    kb.row();
+  });
+  kb.text("✅ Tayyor", "m:projects");
+
+  if (edit) {
+    try {
+      await ctx.editMessageText(text, { parse_mode: "HTML", reply_markup: kb });
+    } catch {
+      // "message is not modified" — e'tiborsiz qoldiramiz
+    }
+  } else {
+    await ctx.reply(text, { parse_mode: "HTML", reply_markup: kb });
+  }
 }
 
 async function sendProjectView(ctx: Context, id: string): Promise<void> {
@@ -239,6 +275,44 @@ export function registerAdminHandlers(bot: Bot): void {
     await ctx.reply("➕ Yangi loyiha.\n\n1/6 — Loyiha <b>nomini</b> yozing:", {
       parse_mode: "HTML",
     });
+  });
+
+  bot.callbackQuery("p:ord", async (ctx) => {
+    if (!guard(ctx)) return denyCallback(ctx);
+    await ctx.answerCallbackQuery();
+    await sendReorderMenu(ctx, false);
+  });
+
+  bot.callbackQuery(/^p:(up|dn):(.+)$/, async (ctx) => {
+    if (!guard(ctx)) return denyCallback(ctx);
+    const [, dir, id] = ctx.match;
+
+    const projects = await fetchProjectsOrdered();
+    const idx = projects.findIndex((p) => p.id === id);
+    if (idx === -1) {
+      await ctx.answerCallbackQuery({ text: "Loyiha topilmadi." });
+      return;
+    }
+    const target = dir === "up" ? idx - 1 : idx + 1;
+    if (target < 0 || target >= projects.length) {
+      await ctx.answerCallbackQuery({
+        text: dir === "up" ? "Allaqachon birinchi." : "Allaqachon oxirgi.",
+      });
+      return;
+    }
+
+    // Indekslarni 1..n qilib normalizatsiya qilamiz (eski «hammasi 0» holatini
+    // ham tuzatadi), keyin tanlangan loyihani qo'shnisi bilan almashtiramiz.
+    [projects[idx], projects[target]] = [projects[target], projects[idx]];
+    const sb = supabaseAdmin();
+    for (let i = 0; i < projects.length; i++) {
+      if (projects[i].sort_order !== i + 1) {
+        await sb.from("projects").update({ sort_order: i + 1 }).eq("id", projects[i].id);
+      }
+    }
+    revalidateTag("projects");
+    await ctx.answerCallbackQuery({ text: "✅" });
+    await sendReorderMenu(ctx, true);
   });
 
   bot.callbackQuery(/^p:e:(\w+):(.+)$/, async (ctx) => {
@@ -726,7 +800,15 @@ async function saveNewProject(
   imageUrls: string[]
 ): Promise<void> {
   const d = session.data;
-  await supabaseAdmin().from("projects").insert({
+  const sb = supabaseAdmin();
+  // Yangi loyiha ro'yxat oxiriga tushadi
+  const { data: last } = await sb
+    .from("projects")
+    .select("sort_order")
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  await sb.from("projects").insert({
     id,
     title: d.title,
     description_en: d.description_en ?? "",
@@ -735,6 +817,7 @@ async function saveNewProject(
     url: d.url,
     image_urls: imageUrls,
     published: true,
+    sort_order: ((last as { sort_order: number } | null)?.sort_order ?? 0) + 1,
   });
   await clearSession(chatId);
   revalidateTag("projects");

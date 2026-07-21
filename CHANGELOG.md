@@ -2,6 +2,17 @@
 
 Har bir sessiyada nima qilingani shu yerda saqlanadi. Yangi ish qilinganda tepasiga qo'shib boriladi.
 
+## 2026-07-21 — Loyihalar tartibini bot orqali boshqarish
+
+- Bot: 📁 Loyihalar menyusida yangi «🔀 Tartib» tugmasi — raqamlangan ro'yxat, har bir
+  loyiha uchun ⬆️/⬇️ tugmalar (birinchisida ⬆️, oxirgisida ⬇️ yo'q). Bosilganda qo'shnisi
+  bilan o'rin almashadi, xabar joyida yangilanadi, `revalidateTag("projects")` chaqiriladi
+- Almashtirishda `sort_order` 1..n qilib normalizatsiya qilinadi (eski «hammasi 0» holati
+  birinchi bosishdayoq tuziladi); migratsiya kerak bo'lmadi — ustun avvaldan bor edi
+- `saveNewProject`: yangi loyiha `sort_order = max + 1` bilan yoziladi (ro'yxat oxiriga)
+- Sayt (`src/lib/data.ts`): `featured DESC` saralash olib tashlandi — tartib endi to'liq
+  `sort_order` (keyin `created_at`) bo'yicha; ★ featured faqat belgi sifatida qoladi
+
 ## 2026-07-09 — Ko'p rasm (karusel), SEO, favicon, About tartibi
 
 ### 1. Loyihalarga 10 tagacha rasm + karusel
